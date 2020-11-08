@@ -95,7 +95,12 @@ window.onload = () => {
     //when the user goes to index
     if (window.location.pathname == '/index.html') { 
         fetchAllGeneres()
-            .then(data => console.log(data))
+            .then(data => console.log(data)).catch(err => {
+                if (err.status === 401) {
+                    //this could be an alternative way to refreh token i guess, rather than just refreshing it on every window load so I could for example create a function refresh token which returns a promise and then when I get a new token and save it, I can try again to fetchAllGEneres.
+                    
+                }
+            })
         
         //logout function
           let logoutBtn = document.getElementById('logout')
