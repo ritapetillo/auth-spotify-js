@@ -25,15 +25,8 @@ let fetchAllGeneres = () => {
         
     }}).then(res=>res.json())
 }
-
-
-//on window load
-window.onload = () => {
-    
-
-    //since the DOM loads any time the page is refreshed, I'm just going to refresh the token every time so that it never expires. An alternative and probalby better way would be to check every time if the token expires and if it's the case then refresh it. So there should be something like if(token epxpires){fetch...}
-    if(JSON.parse(localStorage.getItem('refresh_token')) !== 'undefined')    
-   { fetch(`https://accounts.spotify.com/api/token`,
+const refrehToken = () => {
+    return fetch(`https://accounts.spotify.com/api/token`,
         {
         method: 'POST',
         headers: {
@@ -44,8 +37,13 @@ window.onload = () => {
     }).then(res => res.json()).then(data => {
         localStorage.setItem('access_token', JSON.stringify(data.access_token))
         console.log(JSON.parse(localStorage.getItem('access_token')))
-    })}
+    })
+     
+ }
 
+//on window load
+window.onload = () => {
+    
 
     //if there is no access token then take the user back to login
     if (localStorage.getItem('access_token') === 'undefined') {
@@ -97,8 +95,10 @@ window.onload = () => {
         fetchAllGeneres()
             .then(data => console.log(data)).catch(err => {
                 if (err.status === 401) {
-                    //this could be an alternative way to refreh token i guess, rather than just refreshing it on every window load so I could for example create a function refresh token which returns a promise and then when I get a new token and save it, I can try again to fetchAllGEneres.
-                    
+                    //I check if I get a 401 error (expired token) and if it's the case I refresh the token and then I run the fetch again
+                    if(JSON.parse(localStorage.getItem('refresh_token')) !== 'undefined')
+           { refrehToken()
+                .then(res => fetchAllGeneres().then(data => console.log(data)))}
                 }
             })
         
