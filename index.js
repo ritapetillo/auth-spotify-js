@@ -46,7 +46,7 @@ window.onload = () => {
     
 
     //if there is no access token then take the user back to login
-    if (localStorage.getItem('access_token') === 'undefined') {
+    if (localStorage.getItem('access_token') === 'undefined' & window.location.pathname !== '/login.html') {
         window.location.href = "login.html"
     }
 
