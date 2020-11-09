@@ -43,11 +43,12 @@ const refrehToken = () => {
 
 //on window load
 window.onload = () => {
-    
+     console.log(localStorage.getItem('access_token'))
 
     //if there is no access token then take the user back to login
-    if (localStorage.getItem('access_token') === 'undefined' & window.location.pathname !== '/login.html') {
+    if (localStorage.getItem('access_token') === 'null' && window.location.pathname !== '/login.html') {
         window.location.href = "login.html"
+        console.log('no access token')
     }
 
     //if the user is in the login page
@@ -93,7 +94,8 @@ window.onload = () => {
     //when the user goes to index
     if (window.location.pathname == '/index.html') { 
         fetchAllGeneres()
-            .then(data => console.log(data)).catch(err => {
+            .then(data =>console.log(data))
+            .catch(err => {
                 if (err.status === 401) {
                     //I check if I get a 401 error (expired token) and if it's the case I refresh the token and then I run the fetch again
                     if(JSON.parse(localStorage.getItem('refresh_token')) !== 'undefined')
